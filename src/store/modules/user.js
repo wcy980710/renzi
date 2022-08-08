@@ -1,8 +1,9 @@
-import { login } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 // 状态
 const state = {
-  token: getToken() // 设置token初始状态   token持久化 => 放到缓存中
+  token: getToken(), // 设置token初始状态   token持久化 => 放到缓存中
+  userInfo: {} // 定义一个空对象 不是null 因为后边要开发uesrInfo中的属性给别人用 在getters中 设置为null 会报错 异常
 }
 // 修改状态
 const mutations = {
@@ -15,6 +16,14 @@ const mutations = {
   removeToken(state) {
     state.token = null // 把数据清空
     removeToken() // 执行删除
+  },
+  // 更新一个对象
+  getUserInfo(state, result) {
+    state.userInfo = result
+  },
+  // 删除userinfo的数据
+  removeUserInfo(state) {
+    state.userInfo = {}
   }
 }
 // 处理异步
@@ -28,6 +37,12 @@ const actions = {
     // 现在有用户token
     // actions 修改state 必须通过mutations
     context.commit('setToken', result)
+  },
+  // 获取用户资料
+  async getUserInfo(context) {
+    const result = await getUserInfo() // 获取返回值
+    context.commit('getUserInfo', result) // 将整个的个人信息设置到用户的vuex数据里
+    return result // 为后期权限做伏笔
   }
 
 }
