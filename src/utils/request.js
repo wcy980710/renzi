@@ -10,7 +10,7 @@ const service = axios.create({
   // 如果执行 npm run build 值为 /prod-api  没关系  运维应该在上线的时候 给你配置上 /prod-api的代理
   baseURL: process.env.VUE_APP_BASE_API,
   // 设置axios请求的基础的基础地址
-  timeout: 5000 // 设置超时时间
+  timeout: 500000 // 设置超时时间
 }) // 创建一个axios的实例
 // 请求拦截器
 service.interceptors.request.use(config => {

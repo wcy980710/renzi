@@ -15,6 +15,7 @@ const mutations = {
   // 删除缓存
   removeToken(state) {
     state.token = null // 把数据清空
+
     removeToken() // 执行删除
   },
   // 更新一个对象
