@@ -4,7 +4,15 @@ import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 import router from './router'
 import store from './store'
 import App from './App'
+import Component from '@/components' // 全局组件的引入
+import * as filters from '@/filters' // 引入工具类
+// 注册全局的过滤器
+Object.keys(filters).forEach(key => {
+  // 注册过滤器
+  Vue.filter(key, filters[key])
+})
 
+Vue.use(Component) // 全局组件的注册
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss' // global css
@@ -35,9 +43,11 @@ Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
 
-new Vue({
+const vm = new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App)
 })
+
+console.log(vm)

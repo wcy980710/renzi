@@ -66,6 +66,7 @@ export default {
         this.$emit('addDepts', this.treeNode) // 发送添加子部门的事件
       } else if (type === 'edit') {
         //  编辑部门的操作
+        this.$emit('editDepts', this.treeNode) // 发送编辑子部门的事件
       } else {
         //  删除操作
         this.$confirm('确定要删除该部门吗')

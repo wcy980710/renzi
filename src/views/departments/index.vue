@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div v-loading="loading" class="dashboard-container">
     <div class="app-container">
       <!-- 实现页面的基本布局 -->
       <el-card class="tree-card">
@@ -11,12 +11,18 @@
           <!-- 说明el-tree里面的这个内容 就是插槽内容 => 填坑内容  => 有多少个节点循环多少次 -->
           <!-- scope-scope 是 tree组件传给每个节点的插槽的内容的数据 -->
           <!-- 顺序一定是 执行slot-scope的赋值 才去执行 props的传值 -->
-          <tree-tools slot-scope="obj" :tree-node="obj.data" @addDepts="addDepts" @delDepts="getDepartments" />
+          <tree-tools
+            slot-scope="obj"
+            :tree-node="obj.data"
+            @addDepts="addDepts"
+            @delDepts="getDepartments"
+            @editDepts="editDepts"
+          />
         </el-tree>
       </el-card>
     </div>
     <!-- 放置新增弹层组件  -->
-    <add-dept :show-dialog="showDialog" :tree-node="node" />
+    <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
@@ -39,7 +45,8 @@ export default {
         label: 'name' // 表示 从这个属性显示内容
       },
       showDialog: false, // 显示窗体
-      node: null // 记录当前点击的node节点
+      node: null, // 记录当前点击的node节点
+      loading: false // 用来控制进度弹层的显示和隐藏
     }
   },
   created() {
@@ -47,15 +54,24 @@ export default {
   },
   methods: {
     async getDepartments() {
+      this.loading = true
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人', id: '' }
       this.departs = tranListToTreeData(result.depts, '')
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
+      this.loading = false
     },
     // 监听tree-tools中触发的点击添加事件
     // node 是当前点击的节点
     addDepts(node) {
       this.showDialog = true // 显示弹层
-      this.node = node // 记录当前点击的节点
+      this.node = node // 赋值操作的节点
+    },
+    editDepts(node) {
+      this.showDialog = true // 显示弹层
+      this.node = node // 赋值操作的节点
+      // console.log(this.$refs.addDept)
+      // 父组件 调用子组件的方法 数据回显
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }

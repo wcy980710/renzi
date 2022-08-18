@@ -9,10 +9,10 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
+  components: {},
+
   computed: {
-    ...mapGetters([
-      'name'
-    ])
+    ...mapGetters(['name'])
   }
 }
 </script>
